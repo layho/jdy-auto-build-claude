@@ -1,0 +1,193 @@
+{
+  "login": {
+    "username_input": [
+      "input[placeholder='手机号/邮箱']",
+      ".fx-login-name input.input-inner",
+      "input[placeholder*='邮箱']",
+      "input[placeholder*='手机号']",
+      "input[type='text'].input-inner"
+    ],
+    "password_input": [
+      "input[placeholder='密码']",
+      ".fx-password input.input-inner",
+      "input[placeholder*='密码']",
+      "input[type='password'].input-inner",
+      "input[type='password']"
+    ],
+    "login_button": [
+      "button.login-btn",
+      "button.style-primary.block",
+      "button:has-text('登录')",
+      "button:has-text('登 录')"
+    ]
+  },
+  "app_nav": {
+    "app_selector": [
+      "[data-testid='app-switcher']",
+      "[aria-label='切换应用']"
+    ],
+    "app_name_display": [
+      "[data-app-name]",
+      "[data-testid='app-name']"
+    ],
+    "target_app_option": [
+      ".fx-app-item:has-text('爱马仕') a.app-visit-area",
+      "a:has-text('爱马仕')",
+      "text=爱马仕"
+    ],
+    "app_list_item": [
+      ".fx-app-item",
+      "[class*='app-item']"
+    ]
+  },
+  "form": {
+    "create_form_btn": [
+      "button.add-button",
+      ".fx-entry-create button",
+      "button.add-button:first-of-type",
+      "button:has-text('创建')",
+      "button:has-text('新建')",
+      ".entry-item:has-text('新建表单')"
+    ],
+    "form_name_input": [
+      "input[placeholder*='表单名称']",
+      "input[placeholder*='请输入名称']",
+      "input[placeholder*='名称']",
+      "[data-testid='form-name-input']"
+    ],
+    "form_save_btn": [
+      "button:has-text('确定')",
+      "button:has-text('保存')",
+      "button.style-primary",
+      "[data-testid='form-save']"
+    ],
+    "form_panel": [
+      "[class*='form-panel']",
+      "[class*='form-edit']",
+      "[data-form-panel]",
+      "[data-testid='form-panel']",
+      "[role='main']"
+    ],
+    "form_list": [
+      ".fx-app-menu-tree",
+      ".tree-node",
+      "[data-testid='form-list']"
+    ],
+    "form_item": [
+      ".tree-node",
+      ".fx-entry-node",
+      "[data-testid^='form-item-']",
+      "[data-form-id]"
+    ]
+  },
+  "field": {
+    "edit_mode_btn": [
+      "button:has-text('编辑')",
+      ".menu-icon-text-button:has-text('编辑')"
+    ],
+    "add_field_btn": [
+      "li.form-edit-widget-label",
+      ".field-select-pane li",
+      "[data-testid='add-field']"
+    ],
+    "field_type_selector": [
+      "[data-testid='field-type-select']",
+      "[aria-label='字段类型']"
+    ],
+    "field_type_option": {
+      "text":              ["li.form-edit-widget-label:has-text('单行文本')"],
+      "textarea":          ["li.form-edit-widget-label:has-text('多行文本')"],
+      "number":            ["li.form-edit-widget-label:has-text('数字')"],
+      "datetime":          ["li.form-edit-widget-label:has-text('日期时间')"],
+      "radio":             ["li.form-edit-widget-label:has-text('单选按钮组')"],
+      "checkbox":          ["li.form-edit-widget-label:has-text('复选框组')"],
+      "multi_select":      ["li.form-edit-widget-label:has-text('下拉复选框')"],
+      "select":            ["li.form-edit-widget-label:has-text('下拉框')"],
+      "member_multi":      ["li.form-edit-widget-label:has-text('成员多选')"],
+      "member_single":     ["li.form-edit-widget-label:has-text('成员单选')"],
+      "dept_multi":        ["li.form-edit-widget-label:has-text('部门多选')"],
+      "dept_single":       ["li.form-edit-widget-label:has-text('部门单选')"],
+      "divider":           ["li.form-edit-widget-label:has-text('分割线')"],
+      "tabs":              ["li.form-edit-widget-label:has-text('多标签页')"],
+      "image":             ["li.form-edit-widget-label:has-text('图片')"],
+      "attachment":        ["li.form-edit-widget-label:has-text('附件')"],
+      "address":           ["li.form-edit-widget-label:has-text('地址')"],
+      "location":          ["li.form-edit-widget-label:has-text('定位')"],
+      "subform":           ["li.form-edit-widget-label:has-text('子表单')"],
+      "query":             ["li.form-edit-widget-label:has-text('查询')"],
+      "choose_data":       ["li.form-edit-widget-label:has-text('选择数据')"],
+      "signature":         ["li.form-edit-widget-label:has-text('手写签名')"],
+      "serial":            ["li.form-edit-widget-label:has-text('流水号')"],
+      "phone":             ["li.form-edit-widget-label:has-text('手机')"],
+      "ocr":               ["li.form-edit-widget-label:has-text('文字识别')"],
+      "button":            ["li.form-edit-widget-label:has-text('按钮')"],
+      "calc":              ["li.form-edit-widget-label:has-text('计算')"],
+      "richtext":          ["li.form-edit-widget-label:has-text('富文本')"],
+      "link_data":         ["li.form-edit-widget-label:has-text('关联数据')"],
+      "link_subtable":     ["li.form-edit-widget-label:has-text('关联子表')"]
+    },
+    "field_name_input": [
+      ".fx-field-title-input input.input-inner",
+      ".fx-field-title-input input",
+      "input[placeholder*='字段名称']",
+      "input[placeholder*='标题']",
+      "[data-testid='field-name-input']"
+    ],
+    "field_save_btn": [
+      "button:has-text('保存')",
+      "button.style-primary",
+      "[data-testid='field-save']"
+    ],
+    "field_panel": [
+      ".field-add-pane",
+      ".field-select-pane",
+      "[data-testid='field-config-panel']"
+    ],
+    "field_properties_panel": [
+      "[class*='field-property']",
+      "[class*='property-panel']"
+    ],
+    "drag_handle": [
+      "[data-testid='drag-handle']",
+      "[aria-label='拖拽']",
+      "[role='button'][draggable='true']"
+    ],
+    "drop_zone": [
+      "[data-testid='drop-zone']",
+      "[aria-label='放置区域']",
+      "[data-drop-zone]"
+    ]
+  },
+  "modal": {
+    "close_btn": [
+      "[aria-label='关闭']",
+      "[data-testid='modal-close']",
+      "button:has-text('关闭')",
+      "button:has-text('取消')"
+    ],
+    "confirm_btn": [
+      "[data-testid='modal-confirm']",
+      "[aria-label='确定']",
+      "button:has-text('确定')"
+    ],
+    "modal_overlay": [
+      "[data-testid='modal-overlay']",
+      "[role='dialog']"
+    ]
+  },
+  "common": {
+    "loading_spinner": [
+      "[data-testid='loading']",
+      "[aria-label='加载中']",
+      "[role='progressbar']"
+    ],
+    "toast": [
+      "[data-testid='toast']",
+      "[role='alert']"
+    ],
+    "save_indicator": [
+      "[data-testid='save-status']",
+      "[aria-label='保存状态']"
+    ]
+  }
+}

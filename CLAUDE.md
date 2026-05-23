@@ -36,10 +36,9 @@ screenshots/            # 运行截图
 - 子表单 E2E 测试（完整提交流程通过）
 - 权限设置（表单权限组配置）
 - 聚合表：清理 13 个垃圾表，创建"订单销量统计"（含 CodeMirror 公式编辑器交互）
-- 智能助手 Pro：创建触发（表单触发：订单管理），添加"新增数据"动作节点，选定目标表单=产品信息，部分字段映射
+- 智能助手 Pro：触发(表单触发:订单管理, 新增数据时) → 新增数据到产品信息，5字段完整映射
 
 ### 进行中
-- Phase 24: 智能助手动作节点字段映射完善（树形字段选择器已可用，需映射剩余字段并保存）
 - Phase 25: 仪表盘创建（入口：应用顶部 tab 的"仪表盘"或从工作台创建）
 
 ### 待完成
@@ -49,11 +48,13 @@ screenshots/            # 运行截图
 
 ## 关键 DOM 模式
 
-- **点击事件**: 简道云使用 Vue 框架，必须用 Playwright `click({ force: true })`，`evaluate(el.click())` 和 `dispatchEvent` 无效
+- **点击事件**: 简道云使用 Vue 框架，基本UI操作需用 Playwright `click({ force: true })`。但 **Vue 组件的保存按钮** 需用 `evaluate(el.click())`，Playwright click 无法触发 Vue 事件处理器
 - **确认弹窗**: `.fx-nav-message` / `.message` 组件，不是标准 `.dialog`
 - **表单选择**: `.x-biz-dropdown-label` 点击 → popover `.entry-item` 选择
 - **SPA 路由**: URL hash 模式，如 `#/app_aggregate`、`#/app_trigger`
 - **CodeMirror**: 公式编辑需从树插入 token，不能直接输入文本
+- **多选下拉提交**: `.x-select-multiple` 选中选项后需用 Escape 关闭下拉框才会提交变更到数据模型
+- **保存按钮**: 需 `page.evaluate(() => { document.querySelectorAll('button')...click() })` 而非 Playwright click
 
 ## 应用信息
 

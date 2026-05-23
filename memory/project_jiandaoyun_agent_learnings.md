@@ -273,10 +273,65 @@ metadata:
 - Popover菜单: `[class*="popover"]` 中的选项点击
 - 聚合表数据源: `.x-biz-entry-select-combo button.add-btn`
 
+## 七、聚合表删除与确认对话框模式 (Phase 22)
+
+- 聚合表卡片: `li.fx-aggregate-view-card`
+- 删除按钮: `button.aggregate-delete-btn` (在 `.head-right` 中，仅 hover 可见)
+- 确认弹窗: `.fx-nav-message` / `.message` 组件（不是标准 `.dialog`）
+- 确认按钮: `button:has-text("删除")` 在确认消息中
+- **关键**: 必须用 Playwright `click({ force: true })`，不能用 `evaluate(el.click())` 或 `dispatchEvent`
+- 每次迭代重新查询卡片: `brokenCards.first()` (DOM 刷新后旧的引用失效)
+- 成功删除 13 个"未命名聚合表"垃圾数据
+
+## 八、聚合表公式编辑器 (Phase 23)
+
+### 创建流程
+1. "新建聚合表" → "添加来源表" → popover `.entry-item` 选表单 → "确定"
+2. "添加维度" → 下拉 `.x-biz-field-adder` 选字段
+3. "添加指标" → `fx-aggregate-formula-edit-dialog` 公式编辑对话框
+   - 指标名称: `.aggregate-formula-edit-dialog-content input.input-inner`
+   - 公式编辑: CodeMirror (`.CodeMirror textarea`)
+   - 左侧函数/字段树: `.tree-item` (支持 dblclick 插入)
+
+### CodeMirror 交互
+- 清除公式: 点击 textarea → `Meta+a` → `Backspace`
+- **插入变量必须从树中点击**，不能直接输入文本（会导致"语法错误"）
+- 双击 `.tree-item` 插入变量 token（可能重复插入，需先清空）
+- 单击 `.tree-node` 更可靠
+- 确认: `.dialog-footer button:has-text("确定")`
+
+### 注意事项
+- 删除聚合表时用精确 filter，避免误删（如用 `hasText: '订单'` 会匹配到"采购订单-入库-退货-对账执行统计"）
+- 创建了: 订单销量统计（订单管理, 维度:下单日期, 指标:COUNT(订单管理.数据条数)）
+
+## 九、智能助手 Pro 动作节点配置 (Phase 24)
+
+### 工作流编辑器
+- URL: `dashboard/app/{appId}/automation/{aid}/edit`
+- 画布节点: trigger → action → end
+- "+" 按钮: `.fx-automation-design-plus-icon`
+- 动作菜单 popover: `button.node:has-text("新增数据")` / "修改数据" / "删除数据" / "计算节点"
+- 节点配置抽屉: `.fx-automation-node-config-drawer`
+
+### 目标表单选择
+- 下拉: `.fx-automation-node-config-drawer .x-biz-dropdown-label`
+- 表单列表: `[class*="popover"] .entry-item:has-text("表单名")`
+
+### 字段映射
+- 映射表: 目标表单字段 = "请选择字段" placeholder
+- 点击 placeholder → 弹出树形选择器 (`.tree-item`)
+- 树结构: 父节点"触发数据" → 叶子节点为触发表单的字段
+- 展开树: 点击 `.tree-item-switcher`
+- 选择叶子: `.tree-item-leaf:has-text("字段名")`
+- **注意**: 切换字段后树会收起，每个字段需重新展开
+
+### 保存
+- "仅保存" / "保存并启用" 按钮在编辑器顶部工具栏
+- 状态: 已添加"新增数据"节点，目标表单=产品信息，部分字段已映射
+
 ### 待完成
 - 流程表单端到端测试
-- 仪表盘创建 (应用中未找到直接入口, 需从工作台或应用管理创建)
-- 智能助手动作节点完整配置 (新增数据/修改数据等)
+- 仪表盘创建
+- 智能助手动作节点字段映射完善
 - 数据工厂完整数据流
 - 前端事件配置
-- 清理13个测试遗留的未命名聚合表

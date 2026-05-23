@@ -6,6 +6,8 @@ import * as path from 'path';
 dotenv.config();
 
 const SESSION_FILE = path.resolve('.temp/session.json');
+// Session is valid for 7 days
+const SESSION_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 export interface BrowserSession {
   browser: Browser;
@@ -17,9 +19,8 @@ export interface BrowserSession {
  * Launch browser, optionally restoring a saved session to skip login.
  */
 export async function launchBrowser(): Promise<BrowserSession> {
-  const browser = await chromium.launch({
-    headless: process.env.BROWSER_HEADLESS !== 'false',
-  });
+  const headless = process.env.BROWSER_HEADLESS !== 'false';
+  const browser = await chromium.launch({ headless });
 
   let context: BrowserContext;
 
@@ -52,7 +53,9 @@ export async function saveSession(context: BrowserContext): Promise<void> {
     fs.mkdirSync(dir, { recursive: true });
   }
   const state = await context.storageState();
-  fs.writeFileSync(SESSION_FILE, JSON.stringify(state));
+  // Persist with timestamp so we can check expiry later
+  const payload = { savedAt: Date.now(), state };
+  fs.writeFileSync(SESSION_FILE, JSON.stringify(payload));
   console.log('[SESSION] 已保存会话');
 }
 
@@ -68,14 +71,25 @@ export function clearSession(): void {
 
 function restoreSessionSync(): Record<string, unknown> | null {
   try {
-    if (fs.existsSync(SESSION_FILE)) {
-      const raw = fs.readFileSync(SESSION_FILE, 'utf-8');
-      return JSON.parse(raw);
+    if (!fs.existsSync(SESSION_FILE)) return null;
+    const raw = fs.readFileSync(SESSION_FILE, 'utf-8');
+    const parsed = JSON.parse(raw);
+    // Support both old format (plain state) and new format (with savedAt)
+    if (parsed.savedAt !== undefined) {
+      if (Date.now() - parsed.savedAt > SESSION_MAX_AGE_MS) {
+        console.log('[SESSION] 会话已过期，清除');
+        fs.unlinkSync(SESSION_FILE);
+        return null;
+      }
+      return parsed.state;
     }
+    // Old format - return as-is
+    return parsed;
   } catch {
-    // stale or corrupt
+    console.log('[SESSION] 会话文件损坏，清除');
+    try { fs.unlinkSync(SESSION_FILE); } catch { /* ignore */ }
+    return null;
   }
-  return null;
 }
 
 /**
@@ -104,12 +118,14 @@ export async function login(page: Page): Promise<void> {
 
   // Navigate to workspace first to check if session is valid
   console.log('[LOGIN] 检查登录状态...');
-  await page.goto('https://www.jiandaoyun.com/dashboard', {
-    waitUntil: 'networkidle',
-    timeout: 30000,
-  }).catch(() => {
+  try {
+    await page.goto('https://www.jiandaoyun.com/dashboard', {
+      waitUntil: 'networkidle',
+      timeout: 30000,
+    });
+  } catch {
     console.log('[LOGIN] networkidle timeout, continuing...');
-  });
+  }
 
   await page.waitForTimeout(1000);
   const url = page.url();
@@ -137,6 +153,19 @@ export async function login(page: Page): Promise<void> {
   const loginBtn = await smartLocate(page, selectors.default.login.login_button);
   await loginBtn.click();
 
+  // Wait for navigation away from login page instead of just DOM stability
+  await page.waitForURL((url) => !url.includes('/login') && !url.includes('/signin'), {
+    timeout: 30000,
+  }).catch(async () => {
+    // Fallback: check for error message
+    const errorEl = page.locator('[data-testid="login-error"], .error-message, .login-error');
+    if ((await errorEl.count()) > 0) {
+      const msg = await errorEl.first().textContent();
+      throw new Error(`[LOGIN] 登录失败: ${msg}`);
+    }
+    console.log('[LOGIN] waitForURL timeout, continuing...');
+  });
+
   await waitForStableDOM(page);
   console.log('[LOGIN] 登录完成');
 }
@@ -154,12 +183,14 @@ export async function navigateToApp(page: Page, appName: string): Promise<void> 
   // If not on dashboard, navigate there first
   if (!currentUrl.includes('/dashboard') || currentUrl.includes('/login')) {
     console.log('[NAV] 导航到仪表盘...');
-    await page.goto('https://www.jiandaoyun.com/dashboard', {
-      waitUntil: 'networkidle',
-      timeout: 30000,
-    }).catch(() => {
+    try {
+      await page.goto('https://www.jiandaoyun.com/dashboard', {
+        waitUntil: 'networkidle',
+        timeout: 30000,
+      });
+    } catch {
       console.log('[NAV] dashboard networkidle timeout, continuing...');
-    });
+    }
   }
 
   await waitForStableDOM(page);

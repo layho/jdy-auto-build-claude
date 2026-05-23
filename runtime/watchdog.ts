@@ -9,7 +9,15 @@ interface WatchdogConfig {
   checkIntervalMs: number;
 }
 
-export function startWatchdog(config: Partial<WatchdogConfig> = {}): NodeJS.Timeout {
+interface WatchdogHandle {
+  hardTimer: NodeJS.Timeout;
+  memTimer: NodeJS.Timeout;
+}
+
+// Use a WeakMap-style approach with a plain Map to store handles
+const _handles = new Map<symbol, WatchdogHandle>();
+
+export function startWatchdog(config: Partial<WatchdogConfig> = {}): symbol {
   const {
     hardTimeoutMs = 600_000,
     memoryThresholdMB = 2048,
@@ -21,6 +29,7 @@ export function startWatchdog(config: Partial<WatchdogConfig> = {}): NodeJS.Time
     console.error('[WATCHDOG] Hard timeout reached, force exit');
     process.exit(1);
   }, hardTimeoutMs);
+  hardTimer.unref();
 
   // Memory monitor
   const memTimer = setInterval(() => {
@@ -30,22 +39,23 @@ export function startWatchdog(config: Partial<WatchdogConfig> = {}): NodeJS.Time
       process.exit(1);
     }
   }, checkIntervalMs);
+  memTimer.unref();
 
   console.log(`[WATCHDOG] started (timeout: ${hardTimeoutMs / 1000}s, mem limit: ${memoryThresholdMB}MB)`);
 
-  // Return a combined handle; clearing both on cleanup
-  const combined = setInterval(() => {}, 1000);
-  combined.unref();
-  (combined as unknown as { _hard: NodeJS.Timeout; _mem: NodeJS.Timeout })._hard = hardTimer;
-  (combined as unknown as { _hard: NodeJS.Timeout; _mem: NodeJS.Timeout })._mem = memTimer;
-
-  return combined;
+  const handle = Symbol('watchdog');
+  _handles.set(handle, { hardTimer, memTimer });
+  return handle;
 }
 
-export function stopWatchdog(timer: NodeJS.Timeout): void {
-  const t = timer as unknown as { _hard: NodeJS.Timeout; _mem: NodeJS.Timeout };
-  clearTimeout(t._hard);
-  clearInterval(t._mem);
-  clearInterval(timer);
+export function stopWatchdog(handle: symbol): void {
+  const timers = _handles.get(handle);
+  if (!timers) {
+    console.warn('[WATCHDOG] stopWatchdog called with unknown handle');
+    return;
+  }
+  clearTimeout(timers.hardTimer);
+  clearInterval(timers.memTimer);
+  _handles.delete(handle);
   console.log('[WATCHDOG] stopped');
 }

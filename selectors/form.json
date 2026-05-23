@@ -85,46 +85,33 @@
       "button:has-text('编辑')",
       ".menu-icon-text-button:has-text('编辑')"
     ],
-    "add_field_btn": [
-      "li.form-edit-widget-label",
-      ".field-select-pane li",
-      "[data-testid='add-field']"
-    ],
-    "field_type_selector": [
-      "[data-testid='field-type-select']",
-      "[aria-label='字段类型']"
-    ],
     "field_type_option": {
-      "text":              ["li.form-edit-widget-label:has-text('单行文本')"],
-      "textarea":          ["li.form-edit-widget-label:has-text('多行文本')"],
-      "number":            ["li.form-edit-widget-label:has-text('数字')"],
-      "datetime":          ["li.form-edit-widget-label:has-text('日期时间')"],
-      "radio":             ["li.form-edit-widget-label:has-text('单选按钮组')"],
-      "checkbox":          ["li.form-edit-widget-label:has-text('复选框组')"],
-      "multi_select":      ["li.form-edit-widget-label:has-text('下拉复选框')"],
-      "select":            ["li.form-edit-widget-label:has-text('下拉框')"],
-      "member_multi":      ["li.form-edit-widget-label:has-text('成员多选')"],
-      "member_single":     ["li.form-edit-widget-label:has-text('成员单选')"],
-      "dept_multi":        ["li.form-edit-widget-label:has-text('部门多选')"],
-      "dept_single":       ["li.form-edit-widget-label:has-text('部门单选')"],
-      "divider":           ["li.form-edit-widget-label:has-text('分割线')"],
-      "tabs":              ["li.form-edit-widget-label:has-text('多标签页')"],
-      "image":             ["li.form-edit-widget-label:has-text('图片')"],
-      "attachment":        ["li.form-edit-widget-label:has-text('附件')"],
-      "address":           ["li.form-edit-widget-label:has-text('地址')"],
-      "location":          ["li.form-edit-widget-label:has-text('定位')"],
-      "subform":           ["li.form-edit-widget-label:has-text('子表单')"],
-      "query":             ["li.form-edit-widget-label:has-text('查询')"],
-      "choose_data":       ["li.form-edit-widget-label:has-text('选择数据')"],
-      "signature":         ["li.form-edit-widget-label:has-text('手写签名')"],
-      "serial":            ["li.form-edit-widget-label:has-text('流水号')"],
-      "phone":             ["li.form-edit-widget-label:has-text('手机')"],
-      "ocr":               ["li.form-edit-widget-label:has-text('文字识别')"],
-      "button":            ["li.form-edit-widget-label:has-text('按钮')"],
-      "calc":              ["li.form-edit-widget-label:has-text('计算')"],
-      "richtext":          ["li.form-edit-widget-label:has-text('富文本')"],
-      "link_data":         ["li.form-edit-widget-label:has-text('关联数据')"],
-      "link_subtable":     ["li.form-edit-widget-label:has-text('关联子表')"]
+      "单行文本":  ["li[title='单行文本']", "li.form-edit-widget-label:has-text('单行文本')"],
+      "多行文本":  ["li[title='多行文本']", "li.form-edit-widget-label:has-text('多行文本')"],
+      "数字":     ["li[title='数字']", "li.form-edit-widget-label:has-text('数字')"],
+      "日期时间":  ["li[title='日期时间']", "li.form-edit-widget-label:has-text('日期时间')"],
+      "单选按钮组": ["li[title='单选按钮组']", "li.form-edit-widget-label:has-text('单选按钮组')"],
+      "复选框组":  ["li[title='复选框组']", "li.form-edit-widget-label:has-text('复选框组')"],
+      "下拉复选框": ["li[title='下拉复选框']", "li.form-edit-widget-label:has-text('下拉复选框')"],
+      "下拉框":   ["li[title='下拉框']", "li.form-edit-widget-label:has-text('下拉框')"],
+      "成员多选":  ["li[title='成员多选']", "li.form-edit-widget-label:has-text('成员多选')"],
+      "成员单选":  ["li[title='成员单选']", "li.form-edit-widget-label:has-text('成员单选')"],
+      "部门多选":  ["li[title='部门多选']", "li.form-edit-widget-label:has-text('部门多选')"],
+      "部门单选":  ["li[title='部门单选']", "li.form-edit-widget-label:has-text('部门单选')"],
+      "分割线":   ["li[title='分割线']", "li.form-edit-widget-label:has-text('分割线')"],
+      "图片":     ["li[title='图片']", "li.form-edit-widget-label:has-text('图片')"],
+      "附件":     ["li[title='附件']", "li.form-edit-widget-label:has-text('附件')"],
+      "地址":     ["li[title='地址']", "li.form-edit-widget-label:has-text('地址')"],
+      "定位":     ["li[title='定位']", "li.form-edit-widget-label:has-text('定位')"],
+      "子表单":   ["li[title='子表单']", "li.form-edit-widget-label:has-text('子表单')"],
+      "选择数据":  ["li[title='选择数据']", "li.form-edit-widget-label:has-text('选择数据')"],
+      "关联数据":  ["li[title='关联数据']", "li.form-edit-widget-label:has-text('关联数据')"],
+      "计算":     ["li[title='计算']", "li.form-edit-widget-label:has-text('计算')"],
+      "流水号":   ["li[title='流水号']", "li.form-edit-widget-label:has-text('流水号')"],
+      "手机":     ["li[title='手机']", "li.form-edit-widget-label:has-text('手机')"],
+      "手写签名":  ["li[title='手写签名']", "li.form-edit-widget-label:has-text('手写签名')"],
+      "富文本":   ["li[title='富文本']", "li.form-edit-widget-label:has-text('富文本')"],
+      "查询":     ["li[title='查询']", "li.form-edit-widget-label:has-text('查询')"]
     },
     "field_name_input": [
       ".fx-field-title-input input.input-inner",
@@ -132,11 +119,6 @@
       "input[placeholder*='字段名称']",
       "input[placeholder*='标题']",
       "[data-testid='field-name-input']"
-    ],
-    "field_save_btn": [
-      "button:has-text('保存')",
-      "button.style-primary",
-      "[data-testid='field-save']"
     ],
     "field_panel": [
       ".field-add-pane",
@@ -147,15 +129,30 @@
       "[class*='field-property']",
       "[class*='property-panel']"
     ],
-    "drag_handle": [
-      "[data-testid='drag-handle']",
-      "[aria-label='拖拽']",
-      "[role='button'][draggable='true']"
+    "widget_category": [
+      "[class*='widget-cate']",
+      ".form-widget-group-label"
+    ]
+  },
+  "subform": {
+    "subform_canvas": [
+      ".subform-widget",
+      "[class*='sub-form']",
+      "[data-widget-type='subform']"
+    ]
+  },
+  "options": {
+    "batch_edit_btn": [
+      "button:has-text('批量编辑')",
+      "[class*='batch-edit']"
     ],
-    "drop_zone": [
-      "[data-testid='drop-zone']",
-      "[aria-label='放置区域']",
-      "[data-drop-zone]"
+    "options_textarea": [
+      "textarea[placeholder*='每行一个']",
+      ".options-batch-editor textarea",
+      "textarea"
+    ],
+    "confirm_btn": [
+      "button:has-text('确定')"
     ]
   },
   "modal": {
@@ -170,9 +167,11 @@
       "[aria-label='确定']",
       "button:has-text('确定')"
     ],
-    "modal_overlay": [
-      "[data-testid='modal-overlay']",
-      "[role='dialog']"
+    "confirm_dialog": [
+      ".fx-nav-message",
+      ".message",
+      "[class*='confirm-dialog']",
+      "[role='alertdialog']"
     ]
   },
   "common": {
@@ -181,13 +180,19 @@
       "[aria-label='加载中']",
       "[role='progressbar']"
     ],
-    "toast": [
-      "[data-testid='toast']",
+    "toast_success": [
+      ".toast-success",
+      "[class*='message-success']"
+    ],
+    "toast_error": [
+      ".toast-error",
+      "[class*='message-error']",
       "[role='alert']"
     ],
-    "save_indicator": [
-      "[data-testid='save-status']",
-      "[aria-label='保存状态']"
+    "save_btn": [
+      "button:has-text('保存')",
+      "button.save-btn",
+      "[data-testid='save-btn']"
     ]
   }
 }

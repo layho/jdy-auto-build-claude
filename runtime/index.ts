@@ -5,6 +5,6 @@ export { closeModal, dismissToast, reacquireLocator, recover } from './recovery'
 export { validateApp, validateSave, validateElement } from './validator';
 export { log, logWorkflow, logWorkflowEnd } from './logger';
 export { startWatchdog, stopWatchdog } from './watchdog';
-export { launchBrowser, closeBrowser, login, navigateToApp, isLoggedIn } from './browser';
+export { launchBrowser, closeBrowser, login, navigateToApp, isLoggedIn, saveSession, clearSession } from './browser';
 export type { BrowserSession } from './browser';
 export { dragTo, dragByDispatch } from './dragTo';

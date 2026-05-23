@@ -26,13 +26,20 @@ export async function closeModal(page: Page): Promise<boolean> {
 
 /**
  * Dismiss any visible toast/notification.
+ * Waits for auto-dismiss; clicks close button if available.
  */
 export async function dismissToast(page: Page): Promise<void> {
   const toast = page.locator('[role="alert"], [data-testid="toast"]');
-  if ((await toast.count()) > 0) {
+  if ((await toast.count()) === 0) return;
+
+  // Try to find and click a close button on the toast first
+  const toastClose = page.locator('[role="alert"] button, [data-testid="toast"] button');
+  if ((await toastClose.count()) > 0) {
+    await toastClose.first().click().catch(() => {});
+  } else {
     await page.waitForTimeout(2000); // let it auto-dismiss
-    console.log('[RECOVERY] toast dismissed');
   }
+  console.log('[RECOVERY] toast dismissed');
 }
 
 /**

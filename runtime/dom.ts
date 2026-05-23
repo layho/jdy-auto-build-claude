@@ -30,15 +30,22 @@ export async function getLocalDOM(
 
 /**
  * Capture screenshot (Level 1 snapshot).
+ * Creates screenshots directory if it doesn't exist.
  */
 export async function captureScreenshot(
   page: Page,
   label: string
 ): Promise<string> {
-  const path = `screenshots/${label}-${Date.now()}.png`;
-  await page.screenshot({ path, fullPage: false });
-  console.log(`[DOM] screenshot saved: ${path}`);
-  return path;
+  const fs = await import('fs');
+  if (!fs.existsSync('screenshots')) {
+    fs.mkdirSync('screenshots', { recursive: true });
+  }
+  // Sanitize label to avoid path injection
+  const safeLabel = label.replace(/[^a-zA-Z0-9_-]/g, '_');
+  const filePath = `screenshots/${safeLabel}-${Date.now()}.png`;
+  await page.screenshot({ path: filePath, fullPage: false });
+  console.log(`[DOM] screenshot saved: ${filePath}`);
+  return filePath;
 }
 
 /**

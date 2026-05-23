@@ -104,7 +104,7 @@ export async function login(page: Page): Promise<void> {
 
   // Navigate to workspace first to check if session is valid
   console.log('[LOGIN] 检查登录状态...');
-  await page.goto('https://www.jiandaoyun.com/xiongzhan', {
+  await page.goto('https://www.jiandaoyun.com/dashboard', {
     waitUntil: 'networkidle',
     timeout: 30000,
   }).catch(() => {
@@ -115,7 +115,7 @@ export async function login(page: Page): Promise<void> {
   const url = page.url();
 
   // If not on login page, session is valid — skip login
-  if (!url.includes('/login')) {
+  if (!url.includes('/login') && !url.includes('/signin')) {
     console.log('[LOGIN] 会话有效，跳过登录');
     return;
   }

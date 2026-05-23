@@ -275,12 +275,55 @@ metadata:
 
 ## 七、聚合表删除与确认对话框模式 (Phase 22)
 
-- 聚合表卡片: `li.fx-aggregate-view-card`
-- 删除按钮: `button.aggregate-delete-btn` (在 `.head-right` 中，仅 hover 可见)
-- 确认弹窗: `.fx-nav-message` / `.message` 组件（不是标准 `.dialog`）
-- 确认按钮: `button:has-text("删除")` 在确认消息中
-- **关键**: 必须用 Playwright `click({ force: true })`，不能用 `evaluate(el.click())` 或 `dispatchEvent`
-- 每次迭代重新查询卡片: `brokenCards.first()` (DOM 刷新后旧的引用失效)
+### 删除完整流程
+
+```
+1. 导航到聚合表列表页
+   → page.goto(AGGREGATE_LIST_URL)
+   → waitForStableDOM + waitForTimeout(2000)
+
+2. 定位要删除的卡片
+   → page.locator('li.fx-aggregate-view-card').filter({ hasText: '未命名聚合表' })
+
+3. Hover 卡片使删除按钮可见
+   → card.scrollIntoViewIfNeeded()
+   → card.hover({ force: true })
+   → waitForTimeout(500)
+
+4. 点击删除按钮
+   → card.locator('button.aggregate-delete-btn').first().click({ force: true })
+   → waitForTimeout(800)
+
+5. 等待确认弹窗出现
+   → page.locator('.fx-nav-message, .message').filter({ hasText: '删除' }).first()
+   → waitFor({ state: 'visible', timeout: 5000 })
+
+6. 点击确认删除
+   → page.locator('button:has-text("删除")').last().click({ force: true })
+   → waitForTimeout(2000) + waitForStableDOM
+
+7. 验证删除结果
+   → 重新导航到列表页，检查卡片数量是否减少
+```
+
+### 关键 DOM 元素
+
+| 元素 | 选择器 | 说明 |
+|------|--------|------|
+| 卡片 | `li.fx-aggregate-view-card` | 聚合表列表项 |
+| 标题 | `.head-title` | 在卡片内 |
+| 状态 | `.status-text` | 如"请检查聚合表设置"表示异常 |
+| 删除按钮 | `button.aggregate-delete-btn` | 在 `.head-right` 中，仅 hover 可见 |
+| 确认弹窗 | `.fx-nav-message` / `.message` | **不是** `.dialog` |
+| 确认按钮 | `button:has-text("删除")` | 用 `.last()` 取确认弹窗中的按钮 |
+
+### 踩坑记录
+
+- **必须用 Playwright `click({ force: true })`**，`evaluate(el.click())` 和 `dispatchEvent` 均无法触发 Vue 框架事件
+- **每次迭代重新查询**：`brokenCards.first()` 而非缓存引用，DOM 刷新后旧引用失效
+- **精确 filter**：用具体名称过滤，避免 `hasText: '订单'` 误匹配到"采购订单-入库-退货-对账执行统计"
+- **确认弹窗可能不出现**：需要 try/catch 并截图诊断
+- **循环删除**：用 while 循环 + 计数器防止无限循环（设置 totalDeleted 上限）
 - 成功删除 13 个"未命名聚合表"垃圾数据
 
 ## 八、聚合表公式编辑器 (Phase 23)
